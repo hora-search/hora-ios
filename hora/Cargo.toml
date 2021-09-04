@@ -1,5 +1,5 @@
 [package]
-name = "hora"
+name = "hora-ios"
 version = "0.1.0"
 edition = "2018"
 publish = false
@@ -8,7 +8,7 @@ publish = false
 
 [dependencies]
 lazy_static = "1.4.0"
-real_hora = {package = "hora", version="0.1.1"}
+hora = {version="0.1.1"}
 libc = "0.2"
 
 [lib]

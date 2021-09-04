@@ -1,29 +1,28 @@
 extern crate libc;
+use hora::core::ann_index::SerializableIndex;
 use libc::{c_char, c_float, c_int, size_t};
-use real_hora::core::ann_index::SerializableIndex;
 use std::collections::HashMap;
-use std::ffi::{CStr};
+use std::ffi::CStr;
 use std::sync::Mutex;
 
 #[macro_use]
 extern crate lazy_static;
 
 trait ANNIndexer:
-    real_hora::core::ann_index::ANNIndex<f32, usize>
-    + real_hora::core::ann_index::SerializableIndex<f32, usize>
+    hora::core::ann_index::ANNIndex<f32, usize> + hora::core::ann_index::SerializableIndex<f32, usize>
 {
 }
 
-impl ANNIndexer for real_hora::index::bruteforce_idx::BruteForceIndex<f32, usize> {}
+impl ANNIndexer for hora::index::bruteforce_idx::BruteForceIndex<f32, usize> {}
 
-pub fn metrics_transform(s: &str) -> real_hora::core::metrics::Metric {
+pub fn metrics_transform(s: &str) -> hora::core::metrics::Metric {
     match s {
-        "angular" => real_hora::core::metrics::Metric::Angular,
-        "manhattan" => real_hora::core::metrics::Metric::Manhattan,
-        "dot_product" => real_hora::core::metrics::Metric::DotProduct,
-        "euclidean" => real_hora::core::metrics::Metric::Euclidean,
-        "cosine_similarity" => real_hora::core::metrics::Metric::CosineSimilarity,
-        _ => real_hora::core::metrics::Metric::Unknown,
+        "angular" => hora::core::metrics::Metric::Angular,
+        "manhattan" => hora::core::metrics::Metric::Manhattan,
+        "dot_product" => hora::core::metrics::Metric::DotProduct,
+        "euclidean" => hora::core::metrics::Metric::Euclidean,
+        "cosine_similarity" => hora::core::metrics::Metric::CosineSimilarity,
+        _ => hora::core::metrics::Metric::Unknown,
     }
 }
 
@@ -42,13 +41,12 @@ pub extern "C" fn index(name: *const c_char, dimension: c_int) {
 
     ANN_INDEX_MANAGER.lock().unwrap().insert(
         idx_name,
-        Box::new(real_hora::index::bruteforce_idx::BruteForceIndex::<
-            f32,
-            usize,
-        >::new(
-            idx_dimension,
-            &real_hora::index::bruteforce_params::BruteForceParams::default(),
-        )),
+        Box::new(
+            hora::index::bruteforce_idx::BruteForceIndex::<f32, usize>::new(
+                idx_dimension,
+                &hora::index::bruteforce_params::BruteForceParams::default(),
+            ),
+        ),
     );
 }
 
@@ -73,7 +71,7 @@ pub extern "C" fn add(
 
     match &mut ANN_INDEX_MANAGER.lock().unwrap().get_mut(&idx_name) {
         Some(index) => {
-            let n = real_hora::core::node::Node::new_with_idx(features, idx);
+            let n = hora::core::node::Node::new_with_idx(features, idx);
             index.add_node(&n).unwrap();
         }
         None => {}
@@ -144,8 +142,7 @@ pub extern "C" fn load(name: *const c_char, _file_path: *const c_char) {
     ANN_INDEX_MANAGER.lock().unwrap().insert(
         idx_name,
         Box::new(
-            real_hora::index::bruteforce_idx::BruteForceIndex::<f32, usize>::load(&file_path)
-                .unwrap(),
+            hora::index::bruteforce_idx::BruteForceIndex::<f32, usize>::load(&file_path).unwrap(),
         ),
     );
 }

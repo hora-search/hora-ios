@@ -101,15 +101,6 @@ dependencies = [
 
 [[package]]
 name = "hora"
-version = "0.1.0"
-dependencies = [
- "hora 0.1.1",
- "lazy_static",
- "libc",
-]
-
-[[package]]
-name = "hora"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c42c851d1dc97de92a1a50574295b1b36f0a9443cb33e05eb379147bd34bf1ff"
@@ -121,6 +112,15 @@ dependencies = [
  "rand",
  "rayon",
  "serde",
+]
+
+[[package]]
+name = "hora-ios"
+version = "0.1.0"
+dependencies = [
+ "hora",
+ "lazy_static",
+ "libc",
 ]
 
 [[package]]
