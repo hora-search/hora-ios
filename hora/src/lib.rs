@@ -2,7 +2,7 @@ extern crate libc;
 use libc::{c_char, c_float, c_int, size_t};
 use real_hora::core::ann_index::SerializableIndex;
 use std::collections::HashMap;
-use std::ffi::{CStr, CString};
+use std::ffi::{CStr};
 use std::sync::Mutex;
 
 #[macro_use]
@@ -73,7 +73,7 @@ pub extern "C" fn add(
 
     match &mut ANN_INDEX_MANAGER.lock().unwrap().get_mut(&idx_name) {
         Some(index) => {
-            let n = real_hora::core::node::Node::new_with_idx(&features, idx);
+            let n = real_hora::core::node::Node::new_with_idx(features, idx);
             index.add_node(&n).unwrap();
         }
         None => {}
@@ -118,7 +118,7 @@ pub extern "C" fn search(
 
     if let Some(index) = ANN_INDEX_MANAGER.lock().unwrap().get(&idx_name) {
         result = index
-            .search(&features, topk)
+            .search(features, topk)
             .iter()
             .map(|x| *x as usize)
             .collect();
