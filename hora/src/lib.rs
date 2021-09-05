@@ -1,6 +1,6 @@
 extern crate libc;
 use hora::core::ann_index::SerializableIndex;
-use libc::{c_char, c_float, c_int, size_t};
+use libc::{c_char, c_float, c_int};
 use std::collections::HashMap;
 use std::ffi::CStr;
 use std::sync::Mutex;
@@ -54,8 +54,8 @@ pub extern "C" fn index(name: *const c_char, dimension: c_int) {
 pub extern "C" fn add(
     name: *const c_char,
     original_features: *const c_float,
-    original_features_size: size_t,
-    features_idx: size_t,
+    original_features_size: c_int,
+    features_idx: c_int,
 ) {
     let idx_name: String = unsafe { CStr::from_ptr(name) }
         .to_str()
@@ -97,9 +97,9 @@ pub extern "C" fn build(name: *const c_char, mt: *const c_char) {
 #[no_mangle]
 pub extern "C" fn search(
     name: *const c_char,
-    k: size_t,
+    k: c_int,
     original_features: *const c_float,
-    original_features_size: size_t,
+    original_features_size: c_int,
 ) -> *mut usize {
     let idx_name: String = unsafe { CStr::from_ptr(name) }
         .to_str()
